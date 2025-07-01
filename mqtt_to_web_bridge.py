@@ -6,7 +6,7 @@ import time
 MQTT_BROKER = "broker.hivemq.com"  # Ganti jika pakai lokal
 MQTT_PORT = 1883
 # URL ke update_gas_data.php
-WEB_SERVER_URL = "http://localhost/IoT/update_gas_data.php"
+WEB_SERVER_URL = "http://localhost/IOT/update_gas_data.php"
 
 # --- UBAH BARIS INI: TAMBAHKAN 'properties' ---
 

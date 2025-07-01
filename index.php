@@ -120,7 +120,7 @@
 <body>
     <div class="dashboard-container">
         <h1>Dashboard Monitoring Gas IoT</h1>
-        <p>Pantau status sensor gas dari perangkat ESP32 Anda.</p>
+        <p>Halo, Pantau status sensor gas dari perangkat ESP32 Anda.</p>
 
         <div class="card-grid">
             <div class="card">
@@ -130,18 +130,10 @@
             </div>
             <div class="card">
                 <h3>Status Alarm</h3>
-                <div class="status-badge" id="alarmStatusBadge">UNKNOWN</div>
+                <div class="status-badge" id="alarmStatusBadge">IDLE</div>
             </div>
         </div>
 
-        <div class="control-section">
-            <h2>Kontrol Alarm</h2>
-            <p>Kirim perintah ke perangkat ESP32 Anda.</p>
-            <form id="controlForm">
-                <button type="submit" class="control-button" name="command" value="SILENCE_ALARM">Bungkam Alarm</button>
-            </form>
-            <div id="responseMessage" class="message" style="display:none;"></div>
-        </div>
     </div>
 
     <script>
@@ -156,14 +148,10 @@
                     const alarmBadge = document.getElementById('alarmStatusBadge');
                     alarmBadge.textContent = data.alarmStatus;
                     alarmBadge.className = 'status-badge'; // Reset class
-                    if (data.alarmStatus === 'SAFE') {
-                        alarmBadge.classList.add('status-aman');
-                    } else if (data.alarmStatus === 'ALARM_ACTIVE') {
+                    if (data.alarmStatus === 'ALARM_ACTIVE') {
                         alarmBadge.classList.add('status-bahaya');
-                    } else if (data.alarmStatus === 'SILENCED') {
-                        alarmBadge.classList.add('status-silenced');
                     } else {
-                        alarmBadge.classList.add('status-unknown');
+                        alarmBadge.classList.add('status-aman');;
                     }
                 })
                 .catch(error => {
@@ -174,47 +162,6 @@
                     document.getElementById('alarmStatusBadge').className = 'status-badge status-unknown';
                 });
         }
-
-        // Fungsi untuk mengirim perintah kontrol
-        document.getElementById('controlForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Mencegah form refresh halaman
-
-            const command = event.submitter.value; // Ambil nilai dari tombol yang ditekan
-            const formData = new FormData();
-            formData.append('command', command);
-
-            const responseDiv = document.getElementById('responseMessage');
-
-            fetch('publish.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text()) // publish.php mengembalikan redirect, jadi kita baca teksnya
-            .then(text => {
-                // Karena publish.php melakukan redirect, kita perlu memparse URL-nya
-                const urlParams = new URLSearchParams(text.split('?')[1]);
-                const status = urlParams.get('status');
-                const message = urlParams.get('message');
-
-                responseDiv.style.display = 'block';
-                if (status === 'success') {
-                    responseDiv.className = 'message success';
-                    responseDiv.textContent = 'Perintah berhasil dikirim!';
-                } else {
-                    responseDiv.className = 'message error';
-                    responseDiv.textContent = 'Gagal mengirim perintah: ' + (message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Terjadi kesalahan.');
-                }
-                // Sembunyikan pesan setelah beberapa detik
-                setTimeout(() => { responseDiv.style.display = 'none'; }, 5000);
-            })
-            .catch(error => {
-                console.error('Error sending command:', error);
-                responseDiv.style.display = 'block';
-                responseDiv.className = 'message error';
-                responseDiv.textContent = 'Terjadi kesalahan koneksi saat mengirim perintah.';
-                setTimeout(() => { responseDiv.style.display = 'none'; }, 5000);
-            });
-        });
 
         // Panggil fetchGasData saat halaman dimuat
         document.addEventListener('DOMContentLoaded', fetchGasData);

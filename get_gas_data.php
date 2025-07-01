@@ -4,7 +4,7 @@ header('Content-Type: application/json'); // Beri tahu browser bahwa ini adalah 
 $dataFile = 'last_gas_data.txt';
 $gasValue = "N/A";
 $lastUpdateTime = "N/A";
-$alarmStatus = "UNKNOWN";
+$alarmStatus = "IDLE";
 
 if (file_exists($dataFile)) {
     $data = file_get_contents($dataFile);

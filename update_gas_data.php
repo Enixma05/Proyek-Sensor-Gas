@@ -21,7 +21,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 $gasValue = "N/A";
-$alarmStatus = "UNKNOWN";
+$alarmStatus = "IDLE";
 
 // Sesuaikan ini dengan format JSON yang dikirim oleh webhook broker Anda
 // Atau jika Anda mengirim dari aplikasi lain, pastikan key-nya cocok.
@@ -50,7 +50,7 @@ if (isset($data['topic']) && isset($data['payload'])) {
 } else {
     // Jika tidak ada data JSON atau format tidak sesuai, coba ambil dari POST biasa
     $gasValue = isset($_POST['gas_value']) ? $_POST['gas_value'] : "N/A";
-    $alarmStatus = isset($_POST['alarm_status']) ? $_POST['alarm_status'] : "UNKNOWN";
+    $alarmStatus = isset($_POST['alarm_status']) ? $_POST['alarm_status'] : "IDLE";
 }
 
 
